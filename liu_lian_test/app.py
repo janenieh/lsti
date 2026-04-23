@@ -1,54 +1,54 @@
 import json
-import sys
 import random
+import sys
+from pathlib import Path
+
 import pandas as pd
 
-# 固定 8 个维度
+BASE_DIR = Path(__file__).resolve().parent
+
 DIMS = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
-# 非 D 维度的人格映射
-# 注意：D / E 不直接映射，D 需要结合 E 分叉；E 不能单独作为最终人格输出
 PERSONA_MAP = {
     "A": "A",
     "B": "B",
     "C": "C",
     "F": "F",
     "G": "G",
-    "H": "H"
+    "H": "H",
 }
 
 
-def load_questions():
-    return pd.read_csv("questions.csv")
-
-
-def load_scoring():
-    df = pd.read_csv("scoring.csv")
-    # 自动忽略空行/缺题号选项的行
-    df = df.dropna(subset=["qid", "opt"])
-    # 清理字符串空格，避免 "Q01 " 这类问题
+def load_questions() -> pd.DataFrame:
+    df = pd.read_csv(BASE_DIR / "questions.csv")
     df["qid"] = df["qid"].astype(str).str.strip()
-    df["opt"] = df["opt"].astype(str).str.strip().str.upper()
-    df["main_dim"] = df["main_dim"].astype(str).str.strip()
-    if "sub_dim" in df.columns:
-        df["sub_dim"] = df["sub_dim"].astype(str).str.strip()
     return df
 
 
-def load_personas():
-    with open("personas.json", "r", encoding="utf-8") as f:
+def load_scoring() -> pd.DataFrame:
+    df = pd.read_csv(BASE_DIR / "scoring.csv")
+    df = df.dropna(subset=["qid", "opt"])
+
+    df["qid"] = df["qid"].astype(str).str.strip()
+    df["opt"] = df["opt"].astype(str).str.strip().str.upper()
+    df["main_dim"] = df["main_dim"].astype(str).str.strip()
+
+    if "sub_dim" in df.columns:
+        df["sub_dim"] = df["sub_dim"].astype(str).str.strip()
+
+    return df
+
+
+def load_personas() -> dict:
+    with open(BASE_DIR / "personas.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-def init_scores():
+def init_scores() -> dict:
     return {dim: 0 for dim in DIMS}
 
 
-def apply_answer(scores, row):
-    """
-    主维度：+weight
-    副维度：固定 +1（如果存在）
-    """
+def apply_answer(scores: dict, row: pd.Series) -> None:
     main_dim = row["main_dim"]
     weight = int(row["weight"])
 
@@ -63,10 +63,7 @@ def apply_answer(scores, row):
         scores[sub_dim] += 1
 
 
-def calculate_scores(answers, scoring_df):
-    """
-    answers: dict，如 {"Q01":"A", "Q02":"C"}
-    """
+def calculate_scores(answers: dict, scoring_df: pd.DataFrame) -> dict:
     scores = init_scores()
 
     for qid, opt in answers.items():
@@ -81,107 +78,75 @@ def calculate_scores(answers, scoring_df):
         if match.empty:
             raise ValueError(f"没有找到 {qid} - {opt} 的计分规则")
 
-        row = match.iloc[0]
-        apply_answer(scores, row)
+        apply_answer(scores, match.iloc[0])
 
     return scores
 
 
-def get_sorted_dims(scores):
-    """
-    返回按分数从高到低排序后的列表：
-    [('C', 18), ('G', 16), ...]
-    """
+def get_sorted_dims(scores: dict) -> list:
     return sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
 
-def check_lldg(scores):
-    """
-    LLDG 彩蛋触发规则：
-    - D 在 Top2
-    - F 在 Top3
-    - A >= 平均值
-    - E >= 平均值
-    """
+def check_lldg(scores: dict) -> bool:
     mean_score = sum(scores.values()) / len(scores)
     sorted_items = get_sorted_dims(scores)
+
+    if len(sorted_items) < 3:
+        return False
 
     top2_score = sorted_items[1][1]
     top3_score = sorted_items[2][1]
 
-    if (
+    return (
         scores["D"] >= top2_score and
         scores["F"] >= top3_score and
         scores["A"] >= mean_score and
         scores["E"] >= mean_score
-    ):
-        return True
-
-    return False
+    )
 
 
-def resolve_tie(candidates):
-    """
-    同分随机打破平局
-    """
+def resolve_tie(candidates: list[str]) -> str:
     return random.choice(candidates)
 
 
-def determine_result(scores):
-    """
-    返回最终人格代码或人格名：
-    - A/B/C/F/G/H 返回对应代码（再去 personas.json 取文案）
-    - D 分叉为“巡演特种兵”或“潜伏型抢票机器人”
-    - E 不能直接输出，也要折回线下人格
-    - LLDG 优先级最高
-    """
-    # 先看彩蛋
+def determine_result(scores: dict) -> str:
     if check_lldg(scores):
         return "LLDG"
 
-    # 找最高分（允许同分）
     max_score = max(scores.values())
     top_candidates = [dim for dim, score in scores.items() if score == max_score]
     top1_dim = resolve_tie(top_candidates)
 
-    # D 要结合 E 分叉
     if top1_dim == "D":
         if scores["E"] >= scores["D"] * 0.6:
             return "巡演特种兵"
-        else:
-            return "潜伏型抢票机器人"
+        return "潜伏型抢票机器人"
 
-    # E 不能直接作为最终人格输出
-    # 折回线下人格：
-    # D 较高 → 巡演特种兵
-    # 否则 → 潜伏型抢票机器人
     if top1_dim == "E":
         mean_score = sum(scores.values()) / len(scores)
         if scores["D"] >= mean_score:
             return "巡演特种兵"
-        else:
-            return "潜伏型抢票机器人"
+        return "潜伏型抢票机器人"
 
-    # 其他维度直接映射
     return PERSONA_MAP.get(top1_dim, top1_dim)
 
 
-def print_result(result_code, personas, scores):
+def print_result(result_code: str, personas: dict, scores: dict) -> None:
     print("\n========== 测试结果 ==========")
 
     persona = personas.get(result_code)
-
     if persona is None:
         print(f"结果：未找到对应人格文案（result_code={result_code}）")
     else:
         print(f"结果：{persona.get('name', result_code)}")
         print(f"一句话：{persona.get('summary', '')}")
 
+    print("\n8维分数：")
+    for dim, score in scores.items():
+        print(f"{dim}: {score}")
 
-def validate_answers(answers, questions_df):
-    """
-    简单校验答案文件里的题号是否合法
-    """
+
+def validate_answers(answers: dict, questions_df: pd.DataFrame) -> None:
     valid_qids = set(questions_df["qid"].astype(str).str.strip().tolist())
 
     for qid, opt in answers.items():
@@ -191,7 +156,7 @@ def validate_answers(answers, questions_df):
             raise ValueError(f"答案文件中 {qid} 的答案非法：{opt}")
 
 
-def run_from_answer_file(answer_file):
+def run_from_answer_file(answer_file: str) -> None:
     questions_df = load_questions()
     scoring_df = load_scoring()
     personas = load_personas()
@@ -206,7 +171,7 @@ def run_from_answer_file(answer_file):
     print_result(result_code, personas, scores)
 
 
-def main():
+def main() -> None:
     questions_df = load_questions()
     scoring_df = load_scoring()
     personas = load_personas()
@@ -215,6 +180,7 @@ def main():
 
     for _, row in questions_df.iterrows():
         qid = str(row["qid"]).strip()
+
         print(f"\n{qid}. {row['question']}")
         print(f"A. {row['opt_a']}")
         print(f"B. {row['opt_b']}")
@@ -235,7 +201,6 @@ def main():
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        answer_file = sys.argv[1]
-        run_from_answer_file(answer_file)
+        run_from_answer_file(sys.argv[1])
     else:
         main()
