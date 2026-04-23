@@ -186,7 +186,10 @@ div.stButton > button {
 """, unsafe_allow_html=True)
 
 # 兼容旧版 streamlit
-RERUN = st.experimental_rerun
+if hasattr(st, "rerun"):
+    RERUN = st.rerun
+else:
+    RERUN = st.experimental_rerun
 
 # =========================
 # 结果图片映射（避免中文文件名）
