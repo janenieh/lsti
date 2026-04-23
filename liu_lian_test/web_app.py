@@ -278,6 +278,7 @@ qid = str(row["qid"]).strip()
 question = row["question"]
 
 st.title("LSTI - 刘恋粉丝人格测试")
+st.caption("DEPLOY CHECK 2026-04-24 v1")
 st.caption(f"第 {idx + 1} / {total_questions} 题")
 
 progress = (idx + 1) / total_questions
