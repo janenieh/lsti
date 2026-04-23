@@ -101,25 +101,31 @@ hr {
 /* 直接命中所有 button，避免不同版本 DOM 差异 */
 button {
     width: 100% !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
     min-height: 44px !important;
     padding: 8px 12px !important;
     margin: 0 0 4px 0 !important;
+
     border-radius: 12px !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
     background: rgba(255, 255, 255, 0.92) !important;
     color: #1a1a1a !important;
+
     font-size: 15px !important;
     line-height: 1.35 !important;
     white-space: normal !important;
-    text-align: left !important;
+    text-align: center !important;
     box-sizing: border-box !important;
 }
 
 button p, button span {
     margin: 0 !important;
     color: #1a1a1a !important;
-    text-align: left !important;
+    text-align: center !important;
+    width: 100% !important;
 }
 
 button:hover {
@@ -132,12 +138,13 @@ button:focus {
 }
 
 @media (max-width: 768px) {
-    div[data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        gap: 0.5rem !important;
-        align-items: stretch !important;
+    button {
+        min-height: 42px !important;
+        padding: 7px 10px !important;
+        font-size: 14px !important;
+        margin-bottom: 3px !important;
     }
+}
 
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         flex: 1 1 0 !important;
@@ -252,43 +259,48 @@ def render_question_page():
     st.markdown(f"## {qid}")
     st.write(row["question"])
 
-    # 选项按钮
+    # ===== 选项按钮：放在中间固定宽度区域，保证四个宽度一致 =====
+    current_answer = st.session_state.answers.get(qid)
+
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
-        current_answer = st.session_state.answers.get(qid)
         button_text = f"✅ {label}" if current_answer == opt else label
 
-        if st.button(button_text, key=f"{qid}_{opt}"):
-            st.session_state.answers[qid] = opt
-            RERUN()
+        left_spacer, center_col, right_spacer = st.columns([1, 8, 1])
+
+        with center_col:
+            if st.button(button_text, key=f"{qid}_{opt}"):
+                st.session_state.answers[qid] = opt
+                RERUN()
 
     st.markdown("---")
 
-    # 导航按钮
+    # ===== 导航按钮：靠拢并居中 =====
     if idx < total_questions - 1:
-        col1, col2 = st.columns(2)
+        nav_left, prev_col, next_col, nav_right = st.columns([2, 1.2, 1.2, 2])
 
-        with col1:
+        with prev_col:
             if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
                 st.session_state.current_index -= 1
                 RERUN()
 
-        with col2:
+        with next_col:
             if st.button("下一题", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("请选择一个选项再点击下一题")
+                    st.warning("先选一个再往下走")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
-    else:
-        col1, col2 = st.columns(2)
 
-        with col1:
+    else:
+        nav_left, prev_col, submit_col, nav_right = st.columns([2, 1.2, 1.2, 2])
+
+        with prev_col:
             if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
                 st.session_state.current_index -= 1
                 RERUN()
 
-        with col2:
+        with submit_col:
             if st.button("提交测试", key=f"submit_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("先完成当前题目再提交")
@@ -303,7 +315,6 @@ def render_question_page():
                         st.session_state.result_code = result_code
                         st.session_state.show_result = True
                         RERUN()
-
 
 if st.session_state.show_result:
     render_result_page()
