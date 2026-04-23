@@ -29,7 +29,6 @@ st.markdown("""
 .block-container {
     max-width: 760px;
     margin: 0 auto;
-
     padding-top: 0.2rem !important;
     padding-bottom: 0.6rem !important;
     padding-left: 0.6rem;
@@ -43,7 +42,7 @@ st.markdown("""
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== 文字颜色，避免夜间模式看不清 ===== */
+/* ===== 深色文字，避免夜间模式问题 ===== */
 html, body, .stApp,
 h1, h2, h3, h4, h5,
 p, span, div,
@@ -53,7 +52,7 @@ label,
     color: #1a1a1a !important;
 }
 
-/* ===== 标题和段落间距 ===== */
+/* ===== 标题与段落 ===== */
 h1, h2, h3 {
     margin-top: 0.25rem !important;
     margin-bottom: 0.45rem !important;
@@ -79,49 +78,44 @@ hr {
     margin-bottom: 0.75rem !important;
 }
 
-/* ===== 关键修复：按钮容器和按钮本体都拉满宽度 ===== */
-div.stButton {
+/* ===== 最强制的按钮样式：直接作用到所有 button ===== */
+button {
     width: 100% !important;
+    display: block !important;
+    min-height: 44px !important;
+    padding: 8px 12px !important;
+    margin: 0 0 4px 0 !important;
+
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: #1a1a1a !important;
+
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
 }
 
-div.stButton > button,
-div[data-testid="stButton"] > button {
-    display: block !important;
-    width: 100% !important;
-    min-height: 44px;
-    padding: 8px 12px;
-    font-size: 15px;
-    line-height: 1.35;
-    border-radius: 12px;
-    margin-bottom: 4px;
-    white-space: normal;
-
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.92);
+/* 按钮内文字 */
+button p, button span {
+    margin: 0 !important;
     color: #1a1a1a !important;
     text-align: left !important;
-    justify-content: flex-start !important;
 }
 
-/* hover */
-div.stButton > button:hover,
-div[data-testid="stButton"] > button:hover {
-    border-color: rgba(0, 0, 0, 0.22);
-    background: rgba(255, 255, 255, 0.98);
+/* hover / focus */
+button:hover {
+    border-color: rgba(0, 0, 0, 0.22) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
 }
 
-/* focus */
-div.stButton > button:focus,
-div[data-testid="stButton"] > button:focus {
-    box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18);
+button:focus {
+    box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18) !important;
 }
 
-/* 选项区按钮和翻页按钮分开控制的话，先统一按钮底部间距 */
-div.stButton {
-    margin-bottom: 0.25rem !important;
-}
-
-/* 手机上强制 columns 横排 */
+/* 手机上 columns 保持横排 */
 @media (max-width: 768px) {
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
@@ -141,7 +135,6 @@ div.stButton {
         padding-bottom: 0.6rem !important;
         padding-left: 0.6rem;
         padding-right: 0.6rem;
-
         background: rgba(255, 255, 255, 0.74);
         border-radius: 14px;
     }
@@ -162,12 +155,11 @@ div.stButton {
         font-size: 0.97rem !important;
     }
 
-    div.stButton > button,
-    div[data-testid="stButton"] > button {
-        min-height: 42px;
-        padding: 7px 10px;
-        font-size: 14px;
-        margin-bottom: 3px;
+    button {
+        min-height: 42px !important;
+        padding: 7px 10px !important;
+        font-size: 14px !important;
+        margin-bottom: 3px !important;
     }
 }
 </style>
