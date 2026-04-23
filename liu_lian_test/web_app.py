@@ -18,93 +18,110 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-/* ===== 全局背景（你指定的底色） ===== */
+/* ===== 全局背景 ===== */
 .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stAppViewContainer"] > .main {
     background-color: #adc48a;
 }
 
-/* ===== 主内容区：微透明卡片感 ===== */
+/* ===== 主内容区：微透明卡片 ===== */
 .block-container {
     max-width: 760px;
     margin: 0 auto;
 
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.1rem !important;
+    padding-top: 0.2rem !important;
+    padding-bottom: 0.6rem !important;
     padding-left: 0.6rem;
     padding-right: 0.6rem;
 
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 
     border-radius: 18px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== 标题层级压缩，减少顶部空白 ===== */
+/* ===== 文字颜色，避免夜间模式看不清 ===== */
+html, body, .stApp,
+h1, h2, h3, h4, h5,
+p, span, div,
+label,
+[data-testid="stMarkdownContainer"],
+[data-testid="stText"] {
+    color: #1a1a1a !important;
+}
+
+/* ===== 标题和段落间距 ===== */
 h1, h2, h3 {
     margin-top: 0.25rem !important;
     margin-bottom: 0.45rem !important;
     line-height: 1.25 !important;
 }
 
-/* 标题不要太顶 */
 h1 {
-    font-size: 1.6rem !important;
+    font-size: 1.8rem !important;
 }
 
-/* caption 和正文紧一点 */
 p {
     margin-bottom: 0.55rem !important;
     line-height: 1.55 !important;
 }
 
-/* 进度条上下更紧 */
 .stProgress {
     margin-top: 0.35rem;
     margin-bottom: 0.55rem;
 }
 
-/* 分割线紧一点 */
 hr {
     margin-top: 0.6rem !important;
     margin-bottom: 0.75rem !important;
 }
 
-/* ===== 所有按钮：更适合手机点选 ===== */
-div.stButton > button {
-    width: 100%;
-    min-height: 46px;
-    padding: 12px 12px;
-    font-size: 16px;
+/* ===== 关键修复：按钮容器和按钮本体都拉满宽度 ===== */
+div.stButton {
+    width: 100% !important;
+}
+
+div.stButton > button,
+div[data-testid="stButton"] > button {
+    display: block !important;
+    width: 100% !important;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 15px;
     line-height: 1.35;
     border-radius: 12px;
     margin-bottom: 4px;
     white-space: normal;
 
     border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.88);
-    color: #222;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1a1a1a !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
 }
 
-/* hover 轻反馈 */
-div.stButton > button:hover {
+/* hover */
+div.stButton > button:hover,
+div[data-testid="stButton"] > button:hover {
     border-color: rgba(0, 0, 0, 0.22);
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.98);
 }
 
-/* focus 态 */
-div.stButton > button:focus {
+/* focus */
+div.stButton > button:focus,
+div[data-testid="stButton"] > button:focus {
     box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18);
 }
 
-/* ===== info / warning / error 的圆角更统一 ===== */
-[data-testid="stAlert"] {
-    border-radius: 12px;
+/* 选项区按钮和翻页按钮分开控制的话，先统一按钮底部间距 */
+div.stButton {
+    margin-bottom: 0.25rem !important;
 }
 
-/* ===== 手机上强制 columns 保持左右排列 ===== */
+/* 手机上强制 columns 横排 */
 @media (max-width: 768px) {
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
@@ -120,10 +137,10 @@ div.stButton > button:focus {
 
     .block-container {
         max-width: 100%;
-        padding-top: 0.6rem;
-        padding-bottom: 0.8rem;
-        padding-left: 0.7rem;
-        padding-right: 0.7rem;
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.6rem !important;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
 
         background: rgba(255, 255, 255, 0.74);
         border-radius: 14px;
@@ -145,42 +162,13 @@ div.stButton > button:focus {
         font-size: 0.97rem !important;
     }
 
-    div.stButton > button {
-        min-height: 46px;
-        padding: 9px 10px;
+    div.stButton > button,
+    div[data-testid="stButton"] > button {
+        min-height: 42px;
+        padding: 7px 10px;
         font-size: 14px;
         margin-bottom: 3px;
     }
-
-    /* ===== 强制所有文字为深色（解决夜间模式问题） ===== */
-html, body, .stApp {
-    color: #1a1a1a !important;
-}
-
-/* 标题 */
-h1, h2, h3, h4, h5 {
-    color: #1a1a1a !important;
-}
-
-/* 正文、说明 */
-p, span, div {
-    color: #1a1a1a !important;
-}
-
-/* Streamlit 常见文本容器 */
-[data-testid="stMarkdownContainer"],
-[data-testid="stText"] {
-    color: #1a1a1a !important;
-}
-
-/* 按钮文字 */
-div.stButton > button {
-    color: #1a1a1a !important;
-}
-
-/* 提示框（warning/info等） */
-[data-testid="stAlert"] {
-    color: #1a1a1a !important;
 }
 </style>
 """, unsafe_allow_html=True)
