@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import streamlit as st
 from app import (
     load_questions,
@@ -7,43 +9,61 @@ from app import (
     determine_result,
 )
 
-# =========================
-# 页面基础设置
-# =========================
+BASE_DIR = Path(__file__).resolve().parent
+
 st.set_page_config(
     page_title="LSTI - 刘恋粉丝人格测试",
     page_icon="🎤",
     layout="centered"
 )
 
+# 兼容新旧版 streamlit
+if hasattr(st, "rerun"):
+    RERUN = st.rerun
+else:
+    RERUN = st.experimental_rerun
+
+IMAGE_MAP = {
+    "A": "A.png",
+    "B": "B.png",
+    "C": "C.png",
+    "F": "F.png",
+    "G": "G.png",
+    "H": "H.png",
+    "巡演特种兵": "tour.png",
+    "潜伏型抢票机器人": "stealth.png",
+    "LLDG": "lldg.png"
+}
+
+OPTION_MAP = {
+    "A": "opt_a",
+    "B": "opt_b",
+    "C": "opt_c",
+    "D": "opt_d",
+}
+
 st.markdown("""
 <style>
-/* ===== 全局背景 ===== */
 .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stAppViewContainer"] > .main {
     background-color: #adc48a;
 }
 
-/* ===== 主内容区：微透明卡片 ===== */
 .block-container {
     max-width: 760px;
     margin: 0 auto;
-
     padding-top: 0.2rem !important;
     padding-bottom: 0.6rem !important;
     padding-left: 0.6rem;
     padding-right: 0.6rem;
-
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-
     border-radius: 18px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== 文字颜色，避免夜间模式看不清 ===== */
 html, body, .stApp,
 h1, h2, h3, h4, h5,
 p, span, div,
@@ -53,7 +73,6 @@ label,
     color: #1a1a1a !important;
 }
 
-/* ===== 标题和段落间距 ===== */
 h1, h2, h3 {
     margin-top: 0.25rem !important;
     margin-bottom: 0.45rem !important;
@@ -79,49 +98,39 @@ hr {
     margin-bottom: 0.75rem !important;
 }
 
-/* ===== 关键修复：按钮容器和按钮本体都拉满宽度 ===== */
-div.stButton {
+/* 直接命中所有 button，避免不同版本 DOM 差异 */
+button {
     width: 100% !important;
+    display: block !important;
+    min-height: 44px !important;
+    padding: 8px 12px !important;
+    margin: 0 0 4px 0 !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: #1a1a1a !important;
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
 }
 
-div.stButton > button,
-div[data-testid="stButton"] > button {
-    display: block !important;
-    width: 100% !important;
-    min-height: 44px;
-    padding: 8px 12px;
-    font-size: 15px;
-    line-height: 1.35;
-    border-radius: 12px;
-    margin-bottom: 4px;
-    white-space: normal;
-
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.92);
+button p, button span {
+    margin: 0 !important;
     color: #1a1a1a !important;
     text-align: left !important;
-    justify-content: flex-start !important;
 }
 
-/* hover */
-div.stButton > button:hover,
-div[data-testid="stButton"] > button:hover {
-    border-color: rgba(0, 0, 0, 0.22);
-    background: rgba(255, 255, 255, 0.98);
+button:hover {
+    border-color: rgba(0, 0, 0, 0.22) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
 }
 
-/* focus */
-div.stButton > button:focus,
-div[data-testid="stButton"] > button:focus {
-    box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18);
+button:focus {
+    box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18) !important;
 }
 
-/* 选项区按钮和翻页按钮分开控制的话，先统一按钮底部间距 */
-div.stButton {
-    margin-bottom: 0.25rem !important;
-}
-
-/* 手机上强制 columns 横排 */
 @media (max-width: 768px) {
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
@@ -141,7 +150,6 @@ div.stButton {
         padding-bottom: 0.6rem !important;
         padding-left: 0.6rem;
         padding-right: 0.6rem;
-
         background: rgba(255, 255, 255, 0.74);
         border-radius: 14px;
     }
@@ -162,193 +170,142 @@ div.stButton {
         font-size: 0.97rem !important;
     }
 
-    div.stButton > button,
-    div[data-testid="stButton"] > button {
-        min-height: 42px;
-        padding: 7px 10px;
-        font-size: 14px;
-        margin-bottom: 3px;
+    button {
+        min-height: 42px !important;
+        padding: 7px 10px !important;
+        font-size: 14px !important;
+        margin-bottom: 3px !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
 
-# 兼容旧版 streamlit
-if hasattr(st, "rerun"):
-    RERUN = st.rerun
-else:
-    RERUN = st.experimental_rerun
 
-# =========================
-# 结果图片映射（避免中文文件名）
-# 需要保证 images 文件夹里有这些图片
-# =========================
-IMAGE_MAP = {
-    "A": "A.png",
-    "B": "B.png",
-    "C": "C.png",
-    "F": "F.png",
-    "G": "G.png",
-    "H": "H.png",
-    "巡演特种兵": "tour.png",
-    "潜伏型抢票机器人": "stealth.png",
-    "LLDG": "lldg.png"
-}
+@st.cache_data
+def get_questions():
+    return load_questions().reset_index(drop=True)
 
-# =========================
-# 读取数据
-# =========================
-questions_df = load_questions().reset_index(drop=True)
-scoring_df = load_scoring()
-personas = load_personas()
 
-OPTION_MAP = {
-    "A": "opt_a",
-    "B": "opt_b",
-    "C": "opt_c",
-    "D": "opt_d",
-}
+@st.cache_data
+def get_scoring():
+    return load_scoring()
 
-# =========================
-# session_state 初始化
-# =========================
-if "current_index" not in st.session_state:
+
+@st.cache_data
+def get_personas():
+    return load_personas()
+
+
+questions_df = get_questions()
+scoring_df = get_scoring()
+personas = get_personas()
+
+ALL_QIDS = questions_df["qid"].astype(str).str.strip().tolist()
+
+st.session_state.setdefault("current_index", 0)
+st.session_state.setdefault("answers", {})
+st.session_state.setdefault("show_result", False)
+st.session_state.setdefault("result_code", None)
+
+
+def reset_test():
     st.session_state.current_index = 0
-
-if "answers" not in st.session_state:
     st.session_state.answers = {}
-
-if "show_result" not in st.session_state:
     st.session_state.show_result = False
-
-if "result_code" not in st.session_state:
     st.session_state.result_code = None
 
-if "result_scores" not in st.session_state:
-    st.session_state.result_scores = None
 
-
-# =========================
-# 结果页模式
-# =========================
-if st.session_state.show_result:
+def render_result_page():
     result_code = st.session_state.result_code
-    persona = personas.get(result_code)
+    image_file = IMAGE_MAP.get(result_code)
 
-    if persona is None:
-        st.error(f"未找到对应人格文案（result_code={result_code}）")
+    if image_file is None:
+        st.error(f"未配置图片映射：{result_code}")
     else:
-        image_file = IMAGE_MAP.get(result_code)
-
-        if image_file is None:
-            st.error(f"未配置图片映射：{result_code}")
+        image_path = BASE_DIR / "images" / image_file
+        if image_path.exists():
+            st.image(str(image_path), use_column_width=True)
         else:
-            image_path = f"images/{image_file}"
+            st.error(f"缺少图片文件：{image_path.name}")
 
-            try:
-                # ===== 只显示图片 =====
-                st.image(image_path, use_column_width=True)
-            except Exception:
-                st.error(f"缺少图片文件：{image_path}")
+    st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 
-    # ===== 重新测试按钮 =====
-    st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
-
-    if st.button("重新测试"):
-        st.session_state.current_index = 0
-        st.session_state.answers = {}
-        st.session_state.show_result = False
-        st.session_state.result_code = None
-        st.session_state.result_scores = None
+    if st.button("重新测试", key="restart_result"):
+        reset_test()
         RERUN()
 
     st.stop()
 
-# =========================
-# 答题页模式
-# =========================
 
-# 如果之前答过，默认选中原答案；否则无选中内容
-# ========= 否则显示答题页 =========
-total_questions = len(questions_df)
-idx = st.session_state.current_index
-row = questions_df.iloc[idx]
+def render_question_page():
+    total_questions = len(questions_df)
+    idx = st.session_state.current_index
+    row = questions_df.iloc[idx]
 
-qid = str(row["qid"]).strip()
-question = row["question"]
+    qid = str(row["qid"]).strip()
 
-st.title("LSTI - 刘恋粉丝人格测试")
-st.caption("DEPLOY CHECK 2026-04-24 v1")
-st.caption(f"第 {idx + 1} / {total_questions} 题")
+    st.title("LSTI - 刘恋粉丝人格测试")
+    st.caption(f"第 {idx + 1} / {total_questions} 题")
+    st.progress((idx + 1) / total_questions)
 
-progress = (idx + 1) / total_questions
-st.progress(progress)
+    st.markdown("---")
+    st.markdown(f"## {qid}")
+    st.write(row["question"])
 
-st.markdown("---")
-st.markdown(f"## {qid}")
-st.write(question)
+    # 选项按钮
+    for opt in ["A", "B", "C", "D"]:
+        label = row[OPTION_MAP[opt]]
+        current_answer = st.session_state.answers.get(qid)
+        button_text = f"✅ {label}" if current_answer == opt else label
 
-# 当前已选答案（如果有）
-current_answer = st.session_state.answers.get(qid, None)
+        if st.button(button_text, key=f"{qid}_{opt}"):
+            st.session_state.answers[qid] = opt
+            RERUN()
 
-# ===== 选项按钮区（四个大按钮） =====
-for opt in ["A", "B", "C", "D"]:
-    label = row[OPTION_MAP[opt]]
+    st.markdown("---")
 
-    # 已选中的项前面加标记
-    button_text = f"✅ {label}" if current_answer == opt else label
+    # 导航按钮
+    if idx < total_questions - 1:
+        col1, col2 = st.columns(2)
 
-    if st.button(button_text, key=f"{qid}_{opt}"):
-        st.session_state.answers[qid] = opt
-        RERUN()
-
-st.markdown("---")
-
-# ===== 翻页按钮区 =====
-if idx < total_questions - 1:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if idx > 0:
-            if st.button("← 上一题", key=f"prev_{qid}"):
+        with col1:
+            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
                 st.session_state.current_index -= 1
                 RERUN()
 
-    with col2:
-        if st.button("下一题 →", key=f"next_{qid}"):
-            if qid not in st.session_state.answers:
-                st.warning("请先选择一个选项再进入下一题。")
-            else:
-                st.session_state.current_index += 1
-                RERUN()
-
-else:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if idx > 0:
-            if st.button("← 上一题", key=f"prev_{qid}"):
-                st.session_state.current_index -= 1
-                RERUN()
-
-    with col2:
-        if st.button("提交测试", key=f"submit_{qid}"):
-            if qid not in st.session_state.answers:
-                st.warning("请先完成当前题目再提交测试。")
-            else:
-                unanswered = [
-                    str(r["qid"]).strip()
-                    for _, r in questions_df.iterrows()
-                    if str(r["qid"]).strip() not in st.session_state.answers
-                ]
-
-                if unanswered:
-                    st.error(f"你还有 {len(unanswered)} 题未作答。")
+        with col2:
+            if st.button("下一题", key=f"next_{qid}"):
+                if qid not in st.session_state.answers:
+                    st.warning("先选一个再往下走")
                 else:
-                    scores = calculate_scores(st.session_state.answers, scoring_df)
-                    result_code = determine_result(scores)
-
-                    st.session_state.result_code = result_code
-                    st.session_state.result_scores = scores
-                    st.session_state.show_result = True
+                    st.session_state.current_index += 1
                     RERUN()
+    else:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+                st.session_state.current_index -= 1
+                RERUN()
+
+        with col2:
+            if st.button("提交测试", key=f"submit_{qid}"):
+                if qid not in st.session_state.answers:
+                    st.warning("先完成当前题目再提交")
+                else:
+                    unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
+
+                    if unanswered:
+                        st.error(f"你还有 {len(unanswered)} 题未作答。")
+                    else:
+                        scores = calculate_scores(st.session_state.answers, scoring_df)
+                        result_code = determine_result(scores)
+                        st.session_state.result_code = result_code
+                        st.session_state.show_result = True
+                        RERUN()
+
+
+if st.session_state.show_result:
+    render_result_page()
+else:
+    render_question_page()
