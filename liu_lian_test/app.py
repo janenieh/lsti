@@ -1,7 +1,11 @@
 import json
 import sys
 import random
+from pathlib import Path
 import pandas as pd
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR
 
 # 固定 8 个维度
 DIMS = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -19,11 +23,11 @@ PERSONA_MAP = {
 
 
 def load_questions():
-    return pd.read_csv("questions.csv")
+    return pd.read_csv(DATA_DIR / "questions.csv")
 
 
 def load_scoring():
-    df = pd.read_csv("scoring.csv")
+    df = pd.read_csv(DATA_DIR / "scoring.csv")
     # 自动忽略空行/缺题号选项的行
     df = df.dropna(subset=["qid", "opt"])
     # 清理字符串空格，避免 "Q01 " 这类问题
@@ -36,7 +40,7 @@ def load_scoring():
 
 
 def load_personas():
-    with open("personas.json", "r", encoding="utf-8") as f:
+    with open(DATA_DIR / "personas.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 
