@@ -331,7 +331,7 @@ def render_question_page():
 
         # 用轻量文本标记代替颜色（稳定）
         if current_answer == opt:
-            button_text = f"{label} · √"
+            button_text = f"{label} · 🍎"
         else:
             button_text = label
 
@@ -353,7 +353,7 @@ def render_question_page():
         with col2:
             if st.button("下一题", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("先选一个再往下走")
+                    st.warning("请选一个选项再点下一题")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
