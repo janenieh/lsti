@@ -367,30 +367,21 @@ def render_question_page():
     row = questions_df.iloc[idx]
     qid = str(row["qid"]).strip()
 
-    # ===== 页头 =====
-   st.markdown("<div class='brand-title'>LSTI</div>", unsafe_allow_html=True)
-st.markdown("<div class='brand-subtitle'>刘恋粉丝人格测试</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='progress-text'>第 {idx + 1} / {total_questions} 题</div>", unsafe_allow_html=True)
-st.progress((idx + 1) / total_questions)
+    st.markdown("<div class='brand-title'>LSTI</div>", unsafe_allow_html=True)
+    st.markdown("<div class='brand-subtitle'>刘恋粉丝人格测试</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='progress-text'>第 {idx + 1} / {total_questions} 题</div>", unsafe_allow_html=True)
+    st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
 
-    # ===== 题目 =====
     st.markdown(f"<div class='qid-title'>{qid}</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='question-text'>{row['question']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='question-text'>{row['question']}</div>", unsafe_allow_html=True)
 
-    # ===== 当前选中答案 =====
     current_answer = st.session_state.answers.get(qid)
 
-    # ===== 选项按钮 =====
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
-
-        # 选中显示 ✅
-        if current_answer == opt:
-            button_text = f"✅ {label}"
-        else:
-            button_text = label
+        button_text = f"✅ {label}" if current_answer == opt else label
 
         if st.button(button_text, key=f"{qid}_{opt}"):
             st.session_state.answers[qid] = opt
@@ -398,24 +389,7 @@ st.markdown(f"<div class='question-text'>{row['question']}</div>", unsafe_allow_
 
     st.markdown("---")
 
-    # ===== 导航 =====
     if idx < total_questions - 1:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if idx > 0 and st.button("← 上一题", key=f"prev_{qid}"):
-                st.session_state.current_index -= 1
-                RERUN()
-
-        with col2:
-            if st.button("下一题 →", key=f"next_{qid}"):
-                if qid not in st.session_state.answers:
-                    st.warning("请先完成当前题目")
-                else:
-                    st.session_state.current_index += 1
-                    RERUN()
-
-    else:
         col1, col2 = st.columns(2)
 
         with col1:
@@ -424,29 +398,39 @@ st.markdown(f"<div class='question-text'>{row['question']}</div>", unsafe_allow_
                 RERUN()
 
         with col2:
+            if st.button("下一题 →", key=f"next_{qid}"):
+                if qid not in st.session_state.answers:
+                    st.warning("先选一个再往下走")
+                else:
+                    st.session_state.current_index += 1
+                    RERUN()
+
+    else:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if idx > 0 and st.button("← 上一题", key=f"prev_{qid}"):
+                st.session_state.current_index -= 1
+                RERUN()
+
+        with col2:
             if st.button("提交测试", key=f"submit_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("先完成当前题目再提交")
                 else:
-                    unanswered = [
-                        q for q in ALL_QIDS
-                        if q not in st.session_state.answers
-                    ]
+                    unanswered = [q for q in ALL_QIDS if q not in st.session_state.answers]
 
                     if unanswered:
                         st.error(f"你还有 {len(unanswered)} 题未作答。")
                     else:
-                        scores = calculate_scores(
-                            st.session_state.answers,
-                            scoring_df
-                        )
+                        scores = calculate_scores(st.session_state.answers, scoring_df)
                         result_code = determine_result(scores)
 
                         st.session_state.result_code = result_code
                         st.session_state.show_result = True
                         RERUN()
 
-
+   
 if st.session_state.show_result:
     render_result_page()
 else:
