@@ -286,29 +286,24 @@ def render_result_page():
     result_code = st.session_state.result_code
     image_file = IMAGE_MAP.get(result_code)
 
-    # 结果图只显示图片 + 重新测试按钮
-    left, center, right = st.columns([1.2, 7.6, 1.2])
-
-    with center:
-        if image_file is None:
-            st.error(f"未配置图片映射：{result_code}")
+    if image_file is None:
+        st.error(f"未配置图片映射：{result_code}")
+    else:
+        image_path = BASE_DIR / "images" / image_file
+        if image_path.exists():
+            st.image(str(image_path), use_container_width=True)
         else:
-            image_path = BASE_DIR / "images" / image_file
-            if image_path.exists():
-                st.image(str(image_path), use_container_width=True)
-            else:
-                st.error(f"缺少图片文件：{image_path.name}")
+            st.error(f"缺少图片文件：{image_path.name}")
 
-        st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 
-        nav_l, restart_col, nav_r = st.columns([3, 2, 3])
-        with restart_col:
-            if st.button("重新测试", key="restart_result"):
-                reset_test()
-                RERUN()
+    restart_left, restart_col, restart_right = st.columns([2.5, 2, 2.5])
+    with restart_col:
+        if st.button("重新测试", key="restart_result"):
+            reset_test()
+            RERUN()
 
     st.stop()
-
 
 def render_question_page():
     total_questions = len(questions_df)
