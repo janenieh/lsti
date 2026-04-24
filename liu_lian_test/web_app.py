@@ -305,18 +305,6 @@ def render_question_page():
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
 
-        if current_answer == opt:
-            st.markdown(
-                """
-                <style>
-                div[data-testid="stButton"]:has(button[kind="secondary"]) button {
-                    transition: all 0.15s ease;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
-
         button_text = f"{label} · 已选" if current_answer == opt else label
 
         if st.button(button_text, key=f"{qid}_{opt}"):
