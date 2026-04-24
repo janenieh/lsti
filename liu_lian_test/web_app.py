@@ -329,12 +329,9 @@ def render_question_page():
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
 
-        # 用轻量文本标记代替颜色（稳定）
-       for opt in ["A", "B", "C", "D"]:
+     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
-        button_text = f"✅ {label}" if current_answer == opt 
-        else:
-            button_text = label
+        button_text = f"✅ {label}" if current_answer == opt else label
 
         if st.button(button_text, key=f"{qid}_{opt}"):
             st.session_state.answers[qid] = opt
