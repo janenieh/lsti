@@ -82,7 +82,7 @@ footer {
     padding-left: 1.05rem !important;
     padding-right: 1.05rem !important;
 
-    background: rgba(5, 22, 19, 0.92);
+    background: rgba(12, 40, 34, 0.92);
     border: 1px solid rgba(232, 201, 135, 0.42);
     border-radius: 20px;
     box-shadow:
