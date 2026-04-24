@@ -193,7 +193,7 @@ button {
 
     border-radius: 8px !important;
     border: 1px solid rgba(232, 201, 135, 0.55) !important;
-    background: rgba(7, 28, 24, 0.92) !important;
+    background: rgba(14, 45, 38, 0.92) !important;
     color: #f3dfad !important;
 
     font-size: 1rem !important;
