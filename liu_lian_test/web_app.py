@@ -14,10 +14,10 @@ BASE_DIR = Path(__file__).resolve().parent
 st.set_page_config(
     page_title="LSTI - 刘恋粉丝人格测试",
     page_icon="🎤",
-    layout="centered"
+    layout="wide"
 )
 
-# 兼容新旧版 streamlit
+# 新旧版兼容
 if hasattr(st, "rerun"):
     RERUN = st.rerun
 else:
@@ -44,26 +44,59 @@ OPTION_MAP = {
 
 st.markdown("""
 <style>
+/* =========================
+   隐藏 Streamlit / Cloud 顶部工具条
+   ========================= */
+header[data-testid="stHeader"] {
+    display: none !important;
+}
+div[data-testid="stToolbar"] {
+    display: none !important;
+}
+div[data-testid="stDecoration"] {
+    display: none !important;
+}
+#MainMenu {
+    visibility: hidden !important;
+}
+footer {
+    visibility: hidden !important;
+}
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
+/* =========================
+   全局背景
+   ========================= */
 .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stAppViewContainer"] > .main {
     background-color: #adc48a;
 }
 
+/* =========================
+   页面主卡片
+   ========================= */
 .block-container {
-    max-width: 760px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding-top: 0.2rem !important;
-    padding-bottom: 0.6rem !important;
-    padding-left: 0.6rem;
-    padding-right: 0.6rem;
+    padding-top: 1.2rem !important;
+    padding-bottom: 0.8rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    border-radius: 18px;
+
+    border-radius: 22px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
+/* =========================
+   文字颜色，避免夜间模式发白
+   ========================= */
 html, body, .stApp,
 h1, h2, h3, h4, h5,
 p, span, div,
@@ -73,48 +106,62 @@ label,
     color: #1a1a1a !important;
 }
 
+/* =========================
+   标题与正文间距
+   ========================= */
 h1, h2, h3 {
-    margin-top: 0.25rem !important;
-    margin-bottom: 0.45rem !important;
-    line-height: 1.25 !important;
+    margin-top: 0.1rem !important;
+    margin-bottom: 0.35rem !important;
+    line-height: 1.2 !important;
 }
 
 h1 {
-    font-size: 1.8rem !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+}
+
+h2 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
 }
 
 p {
-    margin-bottom: 0.55rem !important;
-    line-height: 1.55 !important;
+    margin-bottom: 0.45rem !important;
+    line-height: 1.5 !important;
 }
 
+/* 进度条 */
 .stProgress {
-    margin-top: 0.35rem;
-    margin-bottom: 0.55rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.6rem;
 }
 
+/* 分割线 */
 hr {
-    margin-top: 0.6rem !important;
-    margin-bottom: 0.75rem !important;
+    margin-top: 0.55rem !important;
+    margin-bottom: 0.7rem !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
 }
 
-/* 直接命中所有 button，避免不同版本 DOM 差异 */
+/* =========================
+   按钮统一样式
+   ========================= */
 button {
     width: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 
-    min-height: 44px !important;
+    min-height: 48px !important;
     padding: 8px 12px !important;
-    margin: 0 0 4px 0 !important;
+    margin: 0 0 6px 0 !important;
 
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
     background: rgba(255, 255, 255, 0.92) !important;
     color: #1a1a1a !important;
 
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.35 !important;
     white-space: normal !important;
     text-align: center !important;
@@ -123,9 +170,9 @@ button {
 
 button p, button span {
     margin: 0 !important;
+    width: 100% !important;
     color: #1a1a1a !important;
     text-align: center !important;
-    width: 100% !important;
 }
 
 button:hover {
@@ -137,51 +184,58 @@ button:focus {
     box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18) !important;
 }
 
-@media (max-width: 768px) {
-    button {
-        min-height: 42px !important;
-        padding: 7px 10px !important;
-        font-size: 14px !important;
-        margin-bottom: 3px !important;
-    }
+/* 警告/错误提示圆角 */
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
 }
 
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-    }
-
+/* =========================
+   手机端适配
+   ========================= */
+@media (max-width: 768px) {
     .block-container {
         max-width: 100%;
-        padding-top: 0.2rem !important;
-        padding-bottom: 0.6rem !important;
-        padding-left: 0.6rem;
-        padding-right: 0.6rem;
-        background: rgba(255, 255, 255, 0.74);
-        border-radius: 14px;
+        padding-top: 1rem !important;
+        padding-bottom: 0.7rem !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        border-radius: 18px;
     }
 
     h1 {
-        font-size: 1.45rem !important;
+        font-size: 1.55rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0.25rem !important;
     }
 
     h2 {
-        font-size: 1.2rem !important;
-    }
-
-    h3 {
         font-size: 1.05rem !important;
     }
 
     p {
-        font-size: 0.97rem !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
     }
 
     button {
-        min-height: 42px !important;
+        min-height: 44px !important;
         padding: 7px 10px !important;
-        font-size: 14px !important;
-        margin-bottom: 3px !important;
+        margin-bottom: 4px !important;
+        font-size: 15px !important;
+        border-radius: 14px !important;
+    }
+
+    /* 强制 columns 横向排列，避免上一题/下一题上下堆叠 */
+    div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 0.45rem !important;
+        align-items: stretch !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
     }
 }
 </style>
@@ -226,20 +280,26 @@ def render_result_page():
     result_code = st.session_state.result_code
     image_file = IMAGE_MAP.get(result_code)
 
-    if image_file is None:
-        st.error(f"未配置图片映射：{result_code}")
-    else:
-        image_path = BASE_DIR / "images" / image_file
-        if image_path.exists():
-            st.image(str(image_path), use_column_width=True)
+    # 结果图只显示图片 + 重新测试按钮
+    left, center, right = st.columns([1.2, 7.6, 1.2])
+
+    with center:
+        if image_file is None:
+            st.error(f"未配置图片映射：{result_code}")
         else:
-            st.error(f"缺少图片文件：{image_path.name}")
+            image_path = BASE_DIR / "images" / image_file
+            if image_path.exists():
+                st.image(str(image_path), use_container_width=True)
+            else:
+                st.error(f"缺少图片文件：{image_path.name}")
 
-    st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 
-    if st.button("重新测试", key="restart_result"):
-        reset_test()
-        RERUN()
+        nav_l, restart_col, nav_r = st.columns([3, 2, 3])
+        with restart_col:
+            if st.button("重新测试", key="restart_result"):
+                reset_test()
+                RERUN()
 
     st.stop()
 
@@ -248,73 +308,79 @@ def render_question_page():
     total_questions = len(questions_df)
     idx = st.session_state.current_index
     row = questions_df.iloc[idx]
-
     qid = str(row["qid"]).strip()
 
-    st.title("LSTI - 刘恋粉丝人格测试")
-    st.caption(f"第 {idx + 1} / {total_questions} 题")
-    st.progress((idx + 1) / total_questions)
+    # ===== 页头整体居中区域 =====
+    head_left, head_center, head_right = st.columns([1.2, 7.6, 1.2])
+
+    with head_center:
+        st.title("LSTI - 刘恋粉丝人格测试")
+        st.caption(f"第 {idx + 1} / {total_questions} 题")
+        st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
-    st.markdown(f"## {qid}")
-    st.write(row["question"])
 
-    # ===== 选项按钮：放在中间固定宽度区域，保证四个宽度一致 =====
-    current_answer = st.session_state.answers.get(qid)
+    # ===== 题目主体整体居中 =====
+    body_left, body_center, body_right = st.columns([1.2, 7.6, 1.2])
 
-    for opt in ["A", "B", "C", "D"]:
-        label = row[OPTION_MAP[opt]]
-        button_text = f"✅ {label}" if current_answer == opt else label
+    with body_center:
+        st.markdown(f"## {qid}")
+        st.write(row["question"])
 
-        left_spacer, center_col, right_spacer = st.columns([1, 8, 1])
+        current_answer = st.session_state.answers.get(qid)
 
-        with center_col:
+        # 选项按钮：同一列里统一宽度、居中显示
+        for opt in ["A", "B", "C", "D"]:
+            label = row[OPTION_MAP[opt]]
+            button_text = f"✅ {label}" if current_answer == opt else label
+
             if st.button(button_text, key=f"{qid}_{opt}"):
                 st.session_state.answers[qid] = opt
                 RERUN()
 
-    st.markdown("---")
+        st.markdown("---")
 
-    # ===== 导航按钮：靠拢并居中 =====
-    if idx < total_questions - 1:
-        nav_left, prev_col, next_col, nav_right = st.columns([2, 1.2, 1.2, 2])
+        # ===== 导航按钮：居中、左右排列 =====
+        if idx < total_questions - 1:
+            nav_left, prev_col, gap_col, next_col, nav_right = st.columns([2.6, 1.7, 0.35, 1.7, 2.6])
 
-        with prev_col:
-            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
-                st.session_state.current_index -= 1
-                RERUN()
-
-        with next_col:
-            if st.button("下一题", key=f"next_{qid}"):
-                if qid not in st.session_state.answers:
-                    st.warning("请先选择一个选项再点下一题")
-                else:
-                    st.session_state.current_index += 1
+            with prev_col:
+                if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+                    st.session_state.current_index -= 1
                     RERUN()
 
-    else:
-        nav_left, prev_col, submit_col, nav_right = st.columns([2, 1.2, 1.2, 2])
-
-        with prev_col:
-            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
-                st.session_state.current_index -= 1
-                RERUN()
-
-        with submit_col:
-            if st.button("提交测试", key=f"submit_{qid}"):
-                if qid not in st.session_state.answers:
-                    st.warning("先完成当前题目再提交")
-                else:
-                    unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
-
-                    if unanswered:
-                        st.error(f"你还有 {len(unanswered)} 题未作答。")
+            with next_col:
+                if st.button("下一题", key=f"next_{qid}"):
+                    if qid not in st.session_state.answers:
+                        st.warning("请先选择一个选项再点下一题")
                     else:
-                        scores = calculate_scores(st.session_state.answers, scoring_df)
-                        result_code = determine_result(scores)
-                        st.session_state.result_code = result_code
-                        st.session_state.show_result = True
+                        st.session_state.current_index += 1
                         RERUN()
+
+        else:
+            nav_left, prev_col, gap_col, submit_col, nav_right = st.columns([2.6, 1.7, 0.35, 1.7, 2.6])
+
+            with prev_col:
+                if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+                    st.session_state.current_index -= 1
+                    RERUN()
+
+            with submit_col:
+                if st.button("提交测试", key=f"submit_{qid}"):
+                    if qid not in st.session_state.answers:
+                        st.warning("先完成当前题目再提交")
+                    else:
+                        unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
+
+                        if unanswered:
+                            st.error(f"你还有 {len(unanswered)} 题未作答。")
+                        else:
+                            scores = calculate_scores(st.session_state.answers, scoring_df)
+                            result_code = determine_result(scores)
+                            st.session_state.result_code = result_code
+                            st.session_state.show_result = True
+                            RERUN()
+
 
 if st.session_state.show_result:
     render_result_page()
