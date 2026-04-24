@@ -147,14 +147,14 @@ hr {
    按钮统一样式
    ========================= */
 button {
-    width: 100% !important;
+    width: min(100%, 520px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 
-    min-height: 48px !important;
+    min-height: 44px !important;
     padding: 8px 12px !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0 auto 6px auto !important;
 
     border-radius: 14px !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
@@ -175,32 +175,15 @@ button p, button span {
     text-align: center !important;
 }
 
-button:hover {
-    border-color: rgba(0, 0, 0, 0.22) !important;
-    background: rgba(255, 255, 255, 0.98) !important;
-}
-
-button:focus {
-    box-shadow: 0 0 0 0.15rem rgba(120, 150, 80, 0.18) !important;
-}
-
-/* 警告/错误提示圆角 */
-[data-testid="stAlert"] {
-    border-radius: 12px !important;
-}
-
-/* =========================
-   手机端适配
-   ========================= */
 @media (max-width: 768px) {
-    .block-container {
-        max-width: 100%;
-        padding-top: 1rem !important;
-        padding-bottom: 0.7rem !important;
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-        border-radius: 18px;
+    button {
+        width: min(100%, 360px) !important;
+        min-height: 42px !important;
+        padding: 7px 10px !important;
+        font-size: 15px !important;
+        margin-bottom: 5px !important;
     }
+}
 
     h1 {
         font-size: 1.55rem !important;
@@ -310,76 +293,70 @@ def render_question_page():
     row = questions_df.iloc[idx]
     qid = str(row["qid"]).strip()
 
-    # ===== 页头整体居中区域 =====
-    head_left, head_center, head_right = st.columns([1.2, 7.6, 1.2])
-
-    with head_center:
-        st.title("LSTI - 刘恋粉丝人格测试")
-        st.caption(f"第 {idx + 1} / {total_questions} 题")
-        st.progress((idx + 1) / total_questions)
+    # ===== 页头 =====
+    st.title("LSTI - 刘恋粉丝人格测试")
+    st.caption(f"第 {idx + 1} / {total_questions} 题")
+    st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
 
-    # ===== 题目主体整体居中 =====
-    body_left, body_center, body_right = st.columns([1.2, 7.6, 1.2])
+    # ===== 题目主体 =====
+    st.markdown(f"## {qid}")
+    st.write(row["question"])
 
-    with body_center:
-        st.markdown(f"## {qid}")
-        st.write(row["question"])
+    current_answer = st.session_state.answers.get(qid)
 
-        current_answer = st.session_state.answers.get(qid)
+    # ===== 选项按钮：不用 columns，避免手机端横向溢出 =====
+    for opt in ["A", "B", "C", "D"]:
+        label = row[OPTION_MAP[opt]]
+        button_text = f"✅ {label}" if current_answer == opt else label
 
-        # 选项按钮：同一列里统一宽度、居中显示
-        for opt in ["A", "B", "C", "D"]:
-            label = row[OPTION_MAP[opt]]
-            button_text = f"✅ {label}" if current_answer == opt else label
+        if st.button(button_text, key=f"{qid}_{opt}"):
+            st.session_state.answers[qid] = opt
+            RERUN()
 
-            if st.button(button_text, key=f"{qid}_{opt}"):
-                st.session_state.answers[qid] = opt
+    st.markdown("---")
+
+    # ===== 导航按钮 =====
+    if idx < total_questions - 1:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+                st.session_state.current_index -= 1
                 RERUN()
 
-        st.markdown("---")
-
-        # ===== 导航按钮：居中、左右排列 =====
-        if idx < total_questions - 1:
-            nav_left, prev_col, gap_col, next_col, nav_right = st.columns([2.6, 1.7, 0.35, 1.7, 2.6])
-
-            with prev_col:
-                if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
-                    st.session_state.current_index -= 1
+        with col2:
+            if st.button("下一题", key=f"next_{qid}"):
+                if qid not in st.session_state.answers:
+                    st.warning("请先选一个选项再点下一题")
+                else:
+                    st.session_state.current_index += 1
                     RERUN()
 
-            with next_col:
-                if st.button("下一题", key=f"next_{qid}"):
-                    if qid not in st.session_state.answers:
-                        st.warning("请先选择一个选项再点下一题")
+    else:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+                st.session_state.current_index -= 1
+                RERUN()
+
+        with col2:
+            if st.button("提交测试", key=f"submit_{qid}"):
+                if qid not in st.session_state.answers:
+                    st.warning("先完成当前题目再提交")
+                else:
+                    unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
+
+                    if unanswered:
+                        st.error(f"你还有 {len(unanswered)} 题未作答。")
                     else:
-                        st.session_state.current_index += 1
+                        scores = calculate_scores(st.session_state.answers, scoring_df)
+                        result_code = determine_result(scores)
+                        st.session_state.result_code = result_code
+                        st.session_state.show_result = True
                         RERUN()
-
-        else:
-            nav_left, prev_col, gap_col, submit_col, nav_right = st.columns([2.6, 1.7, 0.35, 1.7, 2.6])
-
-            with prev_col:
-                if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
-                    st.session_state.current_index -= 1
-                    RERUN()
-
-            with submit_col:
-                if st.button("提交测试", key=f"submit_{qid}"):
-                    if qid not in st.session_state.answers:
-                        st.warning("先完成当前题目再提交")
-                    else:
-                        unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
-
-                        if unanswered:
-                            st.error(f"你还有 {len(unanswered)} 题未作答。")
-                        else:
-                            scores = calculate_scores(st.session_state.answers, scoring_df)
-                            result_code = determine_result(scores)
-                            st.session_state.result_code = result_code
-                            st.session_state.show_result = True
-                            RERUN()
 
 
 if st.session_state.show_result:
