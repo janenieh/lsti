@@ -116,6 +116,20 @@ footer {
     pointer-events: none;
 }
 
+.block-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+
+    background: radial-gradient(
+        circle at 20% 10%,
+        rgba(232, 201, 135, 0.06),
+        transparent 40%
+    );
+
+    pointer-events: none;
+}
 /* ===== 全局文字颜色 ===== */
 html, body, .stApp,
 h1, h2, h3, h4, h5,
