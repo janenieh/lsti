@@ -316,8 +316,7 @@ def render_question_page():
     qid = str(row["qid"]).strip()
 
     # ===== 页头 =====
-    st.title("LSTI")
-    st.caption("刘恋粉丝人格测试")
+    st.title("LSTI - 刘恋粉丝人格测试")
     st.caption(f"第 {idx + 1} / {total_questions} 题")
     st.progress((idx + 1) / total_questions)
 
@@ -327,19 +326,26 @@ def render_question_page():
     st.markdown(f"## {qid}")
     st.write(row["question"])
 
-   current_answer = st.session_state.answers.get(qid)
+    # ===== 当前选中答案 =====
+    current_answer = st.session_state.answers.get(qid)
 
-  # ===== 选项按钮（稳定版）=====
-for opt in ["A", "B", "C", "D"]:
-    label = row[OPTION_MAP[opt]]
+    # ===== 选项按钮 =====
+    for opt in ["A", "B", "C", "D"]:
+        label = row[OPTION_MAP[opt]]
 
-    button_text = f"✅ {label}" if current_answer == opt else label
+        # 选中显示 ✅
+        if current_answer == opt:
+            button_text = f"✅ {label}"
+        else:
+            button_text = label
 
-    if st.button(button_text, key=f"{qid}_{opt}"):
-        st.session_state.answers[qid] = opt
-        RERUN()
+        if st.button(button_text, key=f"{qid}_{opt}"):
+            st.session_state.answers[qid] = opt
+            RERUN()
 
-    # ===== 导航按钮 =====
+    st.markdown("---")
+
+    # ===== 导航 =====
     if idx < total_questions - 1:
         col1, col2 = st.columns(2)
 
@@ -349,9 +355,9 @@ for opt in ["A", "B", "C", "D"]:
                 RERUN()
 
         with col2:
-            if st.button("下一题", key=f"next_{qid}"):
+            if st.button("下一题 →", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("请选一个选项再点下一题")
+                    st.warning("请先完成当前题目")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
@@ -365,7 +371,7 @@ for opt in ["A", "B", "C", "D"]:
                 RERUN()
 
         with col2:
-            if st.button("提交", key=f"submit_{qid}"):
+            if st.button("提交测试", key=f"submit_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("先完成当前题目再提交")
                 else:
