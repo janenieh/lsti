@@ -312,29 +312,32 @@ def render_question_page():
     qid = str(row["qid"]).strip()
 
     # ===== 页头 =====
-    st.title("LSTI - 刘恋粉丝人格测试")
+    st.title("LSTI")
+    st.caption("刘恋粉丝人格测试")
     st.caption(f"第 {idx + 1} / {total_questions} 题")
     st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
 
-    # ===== 题目主体 =====
+    # ===== 题目 =====
     st.markdown(f"## {qid}")
     st.write(row["question"])
 
     current_answer = st.session_state.answers.get(qid)
 
-   current_answer = st.session_state.answers.get(qid)
+    # ===== 选项按钮（稳定版）=====
+    for opt in ["A", "B", "C", "D"]:
+        label = row[OPTION_MAP[opt]]
 
-for opt in ["A", "B", "C", "D"]:
-    label = row[OPTION_MAP[opt]]
+        # 用轻量文本标记代替颜色（稳定）
+        if current_answer == opt:
+            button_text = f"{label} · 已选"
+        else:
+            button_text = label
 
-    # 先用克制文字标记，稳定、不报错
-    button_text = f"{label} · 已选" if current_answer == opt else label
-
-    if st.button(button_text, key=f"{qid}_{opt}"):
-        st.session_state.answers[qid] = opt
-        RERUN()
+        if st.button(button_text, key=f"{qid}_{opt}"):
+            st.session_state.answers[qid] = opt
+            RERUN()
 
     st.markdown("---")
 
@@ -350,7 +353,7 @@ for opt in ["A", "B", "C", "D"]:
         with col2:
             if st.button("下一题", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("请先选一个选项再点下一题")
+                    st.warning("先选一个再往下走")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
@@ -364,17 +367,24 @@ for opt in ["A", "B", "C", "D"]:
                 RERUN()
 
         with col2:
-            if st.button("提交测试", key=f"submit_{qid}"):
+            if st.button("提交", key=f"submit_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("先完成当前题目再提交")
                 else:
-                    unanswered = [qid for qid in ALL_QIDS if qid not in st.session_state.answers]
+                    unanswered = [
+                        q for q in ALL_QIDS
+                        if q not in st.session_state.answers
+                    ]
 
                     if unanswered:
                         st.error(f"你还有 {len(unanswered)} 题未作答。")
                     else:
-                        scores = calculate_scores(st.session_state.answers, scoring_df)
+                        scores = calculate_scores(
+                            st.session_state.answers,
+                            scoring_df
+                        )
                         result_code = determine_result(scores)
+
                         st.session_state.result_code = result_code
                         st.session_state.show_result = True
                         RERUN()
