@@ -79,55 +79,67 @@ footer {
    页面主卡片
    ========================= */
 .block-container {
-    max-width: 1100px;
+    max-width: 720px;
     margin: 0 auto;
-    padding-top: 1.2rem !important;
-    padding-bottom: 0.8rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.65rem !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
 
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 
-    border-radius: 22px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
 }
 
-/* =========================
-   文字颜色，避免夜间模式发白
-   ========================= */
-html, body, .stApp,
-h1, h2, h3, h4, h5,
-p, span, div,
-label,
-[data-testid="stMarkdownContainer"],
-[data-testid="stText"] {
-    color: #1a1a1a !important;
+.brand-title {
+    font-size: 2.15rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    margin: 0 0 0.1rem 0;
+    color: #1a1a1a;
 }
 
-/* =========================
-   标题与正文间距
-   ========================= */
-h1, h2, h3 {
-    margin-top: 0.1rem !important;
-    margin-bottom: 0.35rem !important;
-    line-height: 1.2 !important;
+.brand-subtitle {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(26, 26, 26, 0.62);
+    margin-bottom: 0.65rem;
 }
 
-h1 {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
+.progress-text {
+    font-size: 0.88rem;
+    color: rgba(26, 26, 26, 0.58);
+    margin-bottom: 0.25rem;
 }
 
-h2 {
-    font-size: 1.25rem !important;
-    font-weight: 700 !important;
+.stProgress {
+    margin-top: 0.15rem;
+    margin-bottom: 0.45rem;
 }
 
-p {
-    margin-bottom: 0.45rem !important;
-    line-height: 1.5 !important;
+hr {
+    margin-top: 0.45rem !important;
+    margin-bottom: 0.5rem !important;
+    border-color: rgba(0, 0, 0, 0.10) !important;
+}
+
+.qid-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0.25rem 0 0.45rem 0;
+    color: #1a1a1a;
+}
+
+.question-text {
+    font-size: 1.02rem;
+    line-height: 1.45;
+    margin-bottom: 0.65rem;
+    color: #1a1a1a;
 }
 
 /* 进度条 */
@@ -185,6 +197,46 @@ button:focus {
 }
 
 @media (max-width: 768px) {
+    .block-container {
+        max-width: 100%;
+        padding-top: 0.65rem !important;
+        padding-bottom: 0.6rem !important;
+        padding-left: 0.85rem !important;
+        padding-right: 0.85rem !important;
+        border-radius: 18px;
+    }
+
+    .brand-title {
+        font-size: 1.9rem;
+        letter-spacing: 0.03em;
+    }
+
+    .brand-subtitle {
+        font-size: 0.88rem;
+        margin-bottom: 0.55rem;
+    }
+
+    .progress-text {
+        font-size: 0.82rem;
+    }
+
+    .qid-title {
+        font-size: 1.45rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .question-text {
+        font-size: 1rem;
+        line-height: 1.42;
+        margin-bottom: 0.55rem;
+    }
+
+    hr {
+        margin-top: 0.38rem !important;
+        margin-bottom: 0.45rem !important;
+    }
+}
     button {
         width: min(100%, 360px) !important;
         min-height: 46px !important;
@@ -316,15 +368,16 @@ def render_question_page():
     qid = str(row["qid"]).strip()
 
     # ===== 页头 =====
-    st.title("LSTI - 刘恋粉丝人格测试")
-    st.caption(f"第 {idx + 1} / {total_questions} 题")
-    st.progress((idx + 1) / total_questions)
+   st.markdown("<div class='brand-title'>LSTI</div>", unsafe_allow_html=True)
+st.markdown("<div class='brand-subtitle'>刘恋粉丝人格测试</div>", unsafe_allow_html=True)
+st.markdown(f"<div class='progress-text'>第 {idx + 1} / {total_questions} 题</div>", unsafe_allow_html=True)
+st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
 
     # ===== 题目 =====
-    st.markdown(f"## {qid}")
-    st.write(row["question"])
+    st.markdown(f"<div class='qid-title'>{qid}</div>", unsafe_allow_html=True)
+st.markdown(f"<div class='question-text'>{row['question']}</div>", unsafe_allow_html=True)
 
     # ===== 当前选中答案 =====
     current_answer = st.session_state.answers.get(qid)
