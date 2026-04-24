@@ -222,27 +222,31 @@ button:focus {
         0 0 0 0.14rem rgba(232, 201, 135, 0.16) !important;
 }
 
-/* ===== 导航按钮单独收窄居中 ===== */
+/* ===== 导航按钮：居中且不出框 ===== */
 div[data-testid="stHorizontalBlock"] {
-    max-width: 200px !important;
-    margin: 0 auto !important;
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 0.45rem !important;
+    max-width: 340px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
     justify-content: center !important;
+    align-items: center !important;
 }
 
-div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-    flex: 1 1 0 !important;
+div[data-testid="stHorizontalBlock"] > div {
+    width: 100% !important;
     min-width: 0 !important;
 }
 
 div[data-testid="stHorizontalBlock"] button {
     width: 100% !important;
-    min-height: 38px !important;
+    min-width: 0 !important;
+    min-height: 40px !important;
     padding: 6px 8px !important;
-    font-size: 0.88rem !important;
-    margin-bottom: 0 !important;
+    margin: 0 !important;
+    font-size: 0.9rem !important;
+    white-space: nowrap !important;
 }
 
 /* ===== 提示框 ===== */
