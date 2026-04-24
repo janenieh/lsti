@@ -315,11 +315,11 @@ div[data-testid="stHorizontalBlock"] button {
     }
 
     div[data-testid="stHorizontalBlock"] {
-    max-width: 220px !important;
+    max-width: 300px !important;
     margin: 0 auto !important;
     display: flex !important;
     justify-content: center !important;
-    gap: 0.4rem !important;
+    gap: 0.6rem !important;
     }
 
     /* 额外稳定（防止某些版本偏移） */
