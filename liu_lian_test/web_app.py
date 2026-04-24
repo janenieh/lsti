@@ -316,7 +316,7 @@ div[data-testid="stHorizontalBlock"] button {
     }
 
     div[data-testid="stHorizontalBlock"] {
-    max-width: 220px !important;
+    max-width: 340px !important;
     margin: 0 auto !important;
     display: flex !important;
     justify-content: center !important;
