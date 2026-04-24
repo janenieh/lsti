@@ -224,7 +224,7 @@ button:focus {
 
 /* ===== 导航按钮单独收窄居中 ===== */
 div[data-testid="stHorizontalBlock"] {
-    max-width: 210px !important;
+    max-width: 200px !important;
     margin: 0 auto !important;
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -308,22 +308,6 @@ div[data-testid="stHorizontalBlock"] button {
         font-size: 0.96rem !important;
         margin-bottom: 9px !important;
         border-radius: 8px !important;
-    }
-
-    /* 金属质感增强 */
-    div[data-testid="stHorizontalBlock"] button {
-    border-radius: 6px !important;
-    letter-spacing: 0.08em;
-
-    background: linear-gradient(
-        180deg,
-        rgba(25, 55, 45, 0.95) 0%,
-        rgba(7, 28, 24, 0.95) 100%
-    ) !important;
-
-    box-shadow:
-        inset 0 0 10px rgba(232, 201, 135, 0.08),
-        0 0 0 1px rgba(232, 201, 135, 0.05);
     }
 
     div[data-testid="stHorizontalBlock"] {
