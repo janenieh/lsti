@@ -192,20 +192,25 @@ button {
     margin: 0 auto 10px auto !important;
 
     border-radius: 8px !important;
+
+    /* 比卡片更亮一点的墨绿 */
+    background: linear-gradient(
+        180deg,
+        rgba(20, 55, 46, 0.95) 0%,
+        rgba(12, 40, 34, 0.95) 100%
+    ) !important;
+
     border: 1px solid rgba(232, 201, 135, 0.55) !important;
-    background: rgba(14, 45, 38, 0.92) !important;
     color: #f3dfad !important;
 
     font-size: 1rem !important;
-    line-height: 1.35 !important;
     letter-spacing: 0.03em;
-    white-space: normal !important;
     text-align: center !important;
-    box-sizing: border-box !important;
 
+    /* 让按钮浮起来 */
     box-shadow:
-        inset 0 0 12px rgba(232, 201, 135, 0.045),
-        0 0 0 1px rgba(232, 201, 135, 0.03);
+        0 4px 10px rgba(0, 0, 0, 0.35),
+        inset 0 0 8px rgba(232, 201, 135, 0.06);
 }
 
 button p, button span {
@@ -216,14 +221,35 @@ button p, button span {
 }
 
 button:hover {
-    background: rgba(15, 42, 35, 0.98) !important;
+    background: linear-gradient(
+        180deg,
+        rgba(28, 70, 60, 0.98) 0%,
+        rgba(18, 52, 45, 0.98) 100%
+    ) !important;
+
     border-color: rgba(241, 217, 154, 0.9) !important;
+
+    transform: translateY(-1px);
 }
 
 button:focus {
     box-shadow:
         inset 0 0 12px rgba(232, 201, 135, 0.08),
         0 0 0 0.14rem rgba(232, 201, 135, 0.16) !important;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.4),
+        inset 0 0 6px rgba(232, 201, 135, 0.08);
+}
+
+button:has(span:contains("🦋")) {
+    border-color: rgba(255, 220, 130, 1) !important;
+    box-shadow:
+        0 0 12px rgba(232, 201, 135, 0.25),
+        inset 0 0 10px rgba(232, 201, 135, 0.08);
 }
 
 /* ===== 导航按钮：居中且不出框 ===== */
