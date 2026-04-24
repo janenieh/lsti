@@ -75,6 +75,8 @@ footer {
 
 /* ===== 主卡片 ===== */
 .block-container {
+    position: relative;
+    overflow: hidden;
     max-width: 720px;
     margin: 1.2rem auto 0 auto;
     padding-top: 1rem !important;
@@ -92,6 +94,26 @@ footer {
     box-shadow:
         0 0 0 1px rgba(232, 201, 135, 0.10),
         0 14px 36px rgba(0, 0, 0, 0.42);
+}
+
+/* 给卡片加轻微纹理 */
+.block-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+
+    /* 噪点 + 微弱亮度 */
+    background:
+        repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.015) 0px,
+            rgba(255, 255, 255, 0.015) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+
+    pointer-events: none;
 }
 
 /* ===== 全局文字颜色 ===== */
