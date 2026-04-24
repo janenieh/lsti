@@ -183,6 +183,29 @@ button p, button span {
         font-size: 15px !important;
         margin-bottom: 5px !important;
     }
+
+    /* 只控制上一题/下一题这一类 columns 行 */
+    div[data-testid="stHorizontalBlock"] {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+        justify-content: center !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] button {
+        width: 100% !important;
+        min-height: 40px !important;
+        padding: 6px 8px !important;
+        font-size: 14px !important;
+        margin-bottom: 0 !important;
+    }
 }
 
     h1 {
