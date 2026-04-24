@@ -443,10 +443,9 @@ def render_question_page():
         label = row[OPTION_MAP[opt]]
         button_text = f"🦋 {label}" if current_answer == opt else label
 
-        with center_col:
-            if st.button(button_text, key=f"{qid}_{opt}"):
-                st.session_state.answers[qid] = opt
-                RERUN()
+        if st.button(button_text, key=f"{qid}_{opt}"):
+            st.session_state.answers[qid] = opt
+            RERUN()
 
     st.markdown("---")
 
