@@ -147,21 +147,21 @@ hr {
    按钮统一样式
    ========================= */
 button {
-    width: min(100%, 520px) !important;
+    width: min(100%, 390px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 
-    min-height: 44px !important;
-    padding: 8px 12px !important;
-    margin: 0 auto 6px auto !important;
+    min-height: 48px !important;
+    padding: 8px 14px !important;
+    margin: 0 auto 12px auto !important;
 
-    border-radius: 14px !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    background: rgba(255, 255, 255, 0.92) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
     color: #1a1a1a !important;
 
-    font-size: 16px !important;
+    font-size: 1rem !important;
     line-height: 1.35 !important;
     white-space: normal !important;
     text-align: center !important;
@@ -171,39 +171,43 @@ button {
 button p, button span {
     margin: 0 !important;
     width: 100% !important;
-    color: #1a1a1a !important;
     text-align: center !important;
+    color: #1a1a1a !important;
+}
+
+button:hover {
+    border-color: rgba(120, 140, 100, 0.28) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+}
+
+button:focus {
+    box-shadow: 0 0 0 0.14rem rgba(120, 150, 80, 0.15) !important;
 }
 
 @media (max-width: 768px) {
     button {
         width: min(100%, 360px) !important;
-        min-height: 42px !important;
+        min-height: 46px !important;
         padding: 7px 10px !important;
-        font-size: 15px !important;
-        margin-bottom: 5px !important;
+        font-size: 0.98rem !important;
+        margin-bottom: 10px !important;
+        border-radius: 16px !important;
     }
 
-    /* 只控制上一题/下一题这一类 columns 行 */
     div[data-testid="stHorizontalBlock"] {
         max-width: 200px !important;
         margin: 0 auto !important;
         display: flex !important;
         flex-wrap: nowrap !important;
-        gap: 0.5rem !important;
+        gap: 0.4rem !important;
         justify-content: center !important;
-    }
-
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
     }
 
     div[data-testid="stHorizontalBlock"] button {
         width: 100% !important;
-        min-height: 40px !important;
-        padding: 6px 8px !important;
-        font-size: 14px !important;
+        min-height: 38px !important;
+        padding: 6px 7px !important;
+        font-size: 0.88rem !important;
         margin-bottom: 0 !important;
     }
 }
@@ -323,21 +327,17 @@ def render_question_page():
     st.markdown(f"## {qid}")
     st.write(row["question"])
 
-    current_answer = st.session_state.answers.get(qid)
+   current_answer = st.session_state.answers.get(qid)
 
-    # ===== 选项按钮（稳定版）=====
-    for opt in ["A", "B", "C", "D"]:
-        label = row[OPTION_MAP[opt]]
+  # ===== 选项按钮（稳定版）=====
+for opt in ["A", "B", "C", "D"]:
+    label = row[OPTION_MAP[opt]]
 
-     for opt in ["A", "B", "C", "D"]:
-        label = row[OPTION_MAP[opt]]
-        button_text = f"✅ {label}" if current_answer == opt else label
+    button_text = f"✅ {label}" if current_answer == opt else label
 
-        if st.button(button_text, key=f"{qid}_{opt}"):
-            st.session_state.answers[qid] = opt
-            RERUN()
-
-    st.markdown("---")
+    if st.button(button_text, key=f"{qid}_{opt}"):
+        st.session_state.answers[qid] = opt
+        RERUN()
 
     # ===== 导航按钮 =====
     if idx < total_questions - 1:
