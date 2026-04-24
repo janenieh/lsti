@@ -319,7 +319,7 @@ div[data-testid="stHorizontalBlock"] button {
     margin: 0 auto !important;
     display: flex !important;
     justify-content: center !important;
-    gap: 0.9rem !important;
+    gap: 1rem !important;
     }
 
     /* 额外稳定（防止某些版本偏移） */
