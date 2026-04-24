@@ -440,13 +440,13 @@ def render_question_page():
     center_col = st.columns([1, 4, 1])[1]
 
     for opt in ["A", "B", "C", "D"]:
-    label = row[OPTION_MAP[opt]]
-    button_text = f"🦋 {label}" if current_answer == opt else label
+        label = row[OPTION_MAP[opt]]
+        button_text = f"🦋 {label}" if current_answer == opt else label
 
-    with center_col:
-        if st.button(button_text, key=f"{qid}_{opt}"):
-            st.session_state.answers[qid] = opt
-            RERUN()
+        with center_col:
+            if st.button(button_text, key=f"{qid}_{opt}"):
+                st.session_state.answers[qid] = opt
+                RERUN()
 
     st.markdown("---")
 
