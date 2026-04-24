@@ -224,7 +224,7 @@ button:focus {
 
 /* ===== 导航按钮：居中且不出框 ===== */
 div[data-testid="stHorizontalBlock"] {
-    max-width: 340px !important;
+    max-width: 220px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     display: grid !important;
