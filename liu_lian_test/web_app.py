@@ -331,7 +331,7 @@ def render_question_page():
 
         # 用轻量文本标记代替颜色（稳定）
         if current_answer == opt:
-            button_text = f"{label} · 已选"
+            button_text = f"{label} · √"
         else:
             button_text = label
 
