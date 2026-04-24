@@ -311,8 +311,11 @@ div[data-testid="stHorizontalBlock"] button {
     }
 
     div[data-testid="stHorizontalBlock"] {
-        max-width: 200px !important;
-        gap: 0.4rem !important;
+    max-width: 220px !important;   /* 控制整体宽度 */
+    margin: 0 auto !important;     /* 关键：居中 */
+    display: flex !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
     }
 
     div[data-testid="stHorizontalBlock"] button {
