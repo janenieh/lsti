@@ -217,7 +217,7 @@ hr {
 }
 
 .question-text {
-    font-size: 1.03rem;
+    font-size: 1.25rem;
     line-height: 1.58;
     color: #f3dfad;
     margin-bottom: 0.85rem;
