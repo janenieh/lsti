@@ -98,8 +98,8 @@ def check_lldg(scores: dict) -> bool:
     top3_score = sorted_items[2][1]
 
     return (
-        scores["D"] >= top2_score and
-        scores["F"] >= top3_score and
+        scores["D"] >= top3_score and
+        scores["F"] >= mean_score and
         scores["A"] >= mean_score and
         scores["E"] >= mean_score
     )
