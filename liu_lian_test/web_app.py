@@ -100,7 +100,7 @@ label,
     color: #f1d99a !important;
 }
 
-/* ===== 品牌标题 ===== */
+/* ===== 标题 ===== */
 .brand-row {
     display: flex;
     align-items: baseline;
