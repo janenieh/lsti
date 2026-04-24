@@ -94,7 +94,13 @@ footer {
     box-shadow:
         0 0 0 1px rgba(232, 201, 135, 0.10),
         0 14px 36px rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(232, 201, 135, 0.45);
+
+    box-shadow:
+        0 0 0 1px rgba(232, 201, 135, 0.15),
+        0 12px 32px rgba(0,0,0,0.35);
 }
+
 
 /* 给卡片加轻微纹理 */
 .block-container::before {
@@ -130,6 +136,27 @@ footer {
 
     pointer-events: none;
 }
+
+.block-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background:
+        linear-gradient(#e8c987, #e8c987) left top / 18px 2px no-repeat,
+        linear-gradient(#e8c987, #e8c987) left top / 2px 18px no-repeat,
+
+        linear-gradient(#e8c987, #e8c987) right top / 18px 2px no-repeat,
+        linear-gradient(#e8c987, #e8c987) right top / 2px 18px no-repeat,
+
+        linear-gradient(#e8c987, #e8c987) left bottom / 18px 2px no-repeat,
+        linear-gradient(#e8c987, #e8c987) left bottom / 2px 18px no-repeat,
+
+        linear-gradient(#e8c987, #e8c987) right bottom / 18px 2px no-repeat,
+        linear-gradient(#e8c987, #e8c987) right bottom / 2px 18px no-repeat;
+}
+
 /* ===== 全局文字颜色 ===== */
 html, body, .stApp,
 h1, h2, h3, h4, h5,
