@@ -426,7 +426,7 @@ def render_question_page():
 
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
-        button_text = f"✅ {label}" if current_answer == opt else label
+        button_text = f"🦋 {label}" if current_answer == opt else label
 
         if st.button(button_text, key=f"{qid}_{opt}"):
             st.session_state.answers[qid] = opt
@@ -444,7 +444,7 @@ def render_question_page():
                 RERUN()
 
         with col2:
-            if st.button("下一题", key=f"next_{qid}"):
+            if st.button("下一题 →", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("请先选一个选项再点下一题")
                 else:
