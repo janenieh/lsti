@@ -79,89 +79,68 @@ footer {
    页面主卡片
    ========================= */
 .block-container {
-    max-width: 1100px;
+    max-width: 760px;
     margin: 0 auto;
-    padding-top: 1.2rem !important;
+    padding-top: 1rem !important;
     padding-bottom: 0.8rem !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
 
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 
     border-radius: 22px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-/* =========================
-   文字颜色，避免夜间模式发白
-   ========================= */
-html, body, .stApp,
-h1, h2, h3, h4, h5,
-p, span, div,
-label,
-[data-testid="stMarkdownContainer"],
-[data-testid="stText"] {
-    color: #1a1a1a !important;
-}
-
-/* =========================
-   标题与正文间距
-   ========================= */
-h1, h2, h3 {
-    margin-top: 0.1rem !important;
-    margin-bottom: 0.35rem !important;
-    line-height: 1.2 !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 h1 {
-    font-size: 2rem !important;
+    font-size: 1.45rem !important;
     font-weight: 700 !important;
+    line-height: 1.2 !important;
+    margin-top: 0.1rem !important;
+    margin-bottom: 0.4rem !important;
 }
 
 h2 {
     font-size: 1.25rem !important;
-    font-weight: 700 !important;
+    margin-top: 0.4rem !important;
+    margin-bottom: 0.55rem !important;
 }
 
 p {
-    margin-bottom: 0.45rem !important;
-    line-height: 1.5 !important;
+    font-size: 1rem !important;
+    line-height: 1.48 !important;
+    margin-bottom: 0.55rem !important;
 }
 
-/* 进度条 */
 .stProgress {
     margin-top: 0.25rem;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.45rem;
 }
 
-/* 分割线 */
 hr {
     margin-top: 0.55rem !important;
-    margin-bottom: 0.7rem !important;
-    border-color: rgba(0, 0, 0, 0.12) !important;
+    margin-bottom: 0.65rem !important;
+    border-color: rgba(0, 0, 0, 0.10) !important;
 }
 
-/* =========================
-   按钮统一样式
-   ========================= */
 button {
-    width: min(100%, 520px) !important;
+    width: min(100%, 390px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 
     min-height: 44px !important;
-    padding: 8px 12px !important;
-    margin: 0 auto 6px auto !important;
+    padding: 8px 14px !important;
+    margin: 0 auto 7px auto !important;
 
-    border-radius: 14px !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(120, 140, 100, 0.22) !important;
     background: rgba(255, 255, 255, 0.92) !important;
-    color: #1a1a1a !important;
+    color: #1f241d !important;
 
-    font-size: 16px !important;
+    font-size: 1rem !important;
     line-height: 1.35 !important;
     white-space: normal !important;
     text-align: center !important;
@@ -171,81 +150,81 @@ button {
 button p, button span {
     margin: 0 !important;
     width: 100% !important;
-    color: #1a1a1a !important;
     text-align: center !important;
+    color: #1f241d !important;
 }
 
+button:hover {
+    border-color: rgba(108, 132, 82, 0.55) !important;
+    background: rgba(246, 250, 240, 0.98) !important;
+}
+
+button:focus {
+    box-shadow: 0 0 0 0.16rem rgba(120, 150, 80, 0.18) !important;
+}
+
+/* 导航按钮单独收窄 */
+div[data-testid="stHorizontalBlock"] {
+    max-width: 220px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.45rem !important;
+    justify-content: center !important;
+}
+
+div[data-testid="stHorizontalBlock"] button {
+    width: 100% !important;
+    min-height: 40px !important;
+    padding: 6px 8px !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0 !important;
+}
+
+/* 手机端 */
 @media (max-width: 768px) {
-    button {
-        width: min(100%, 360px) !important;
-        min-height: 42px !important;
-        padding: 7px 10px !important;
-        font-size: 15px !important;
-        margin-bottom: 5px !important;
+    .block-container {
+        max-width: 100%;
+        padding-top: 0.9rem !important;
+        padding-bottom: 0.75rem !important;
+        padding-left: 0.9rem !important;
+        padding-right: 0.9rem !important;
+        border-radius: 20px;
     }
-
-    /* 只控制上一题/下一题这一类 columns 行 */
-    div[data-testid="stHorizontalBlock"] {
-        max-width: 200px !important;
-        margin: 0 auto !important;
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        gap: 0.5rem !important;
-        justify-content: center !important;
-    }
-
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-    }
-
-    div[data-testid="stHorizontalBlock"] button {
-        width: 100% !important;
-        min-height: 40px !important;
-        padding: 6px 8px !important;
-        font-size: 14px !important;
-        margin-bottom: 0 !important;
-    }
-}
 
     h1 {
-        font-size: 1.55rem !important;
-        margin-top: 0 !important;
-        margin-bottom: 0.25rem !important;
+        font-size: 1.35rem !important;
+        margin-bottom: 0.35rem !important;
     }
 
     h2 {
-        font-size: 1.05rem !important;
+        font-size: 1.15rem !important;
     }
 
     p {
-        font-size: 1rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.98rem !important;
+        line-height: 1.45 !important;
     }
 
     button {
-        min-height: 44px !important;
+        width: min(100%, 350px) !important;
+        min-height: 42px !important;
         padding: 7px 10px !important;
-        margin-bottom: 4px !important;
-        font-size: 15px !important;
-        border-radius: 14px !important;
+        font-size: 0.96rem !important;
+        margin-bottom: 6px !important;
     }
 
-    /* 强制 columns 横向排列，避免上一题/下一题上下堆叠 */
     div[data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        gap: 0.45rem !important;
-        align-items: stretch !important;
+        max-width: 200px !important;
+        gap: 0.4rem !important;
     }
 
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
+    div[data-testid="stHorizontalBlock"] button {
+        min-height: 38px !important;
+        font-size: 0.88rem !important;
+        padding: 6px 7px !important;
     }
 }
-</style>
-""", unsafe_allow_html=True)
 
 
 @st.cache_data
@@ -311,31 +290,56 @@ def render_question_page():
     row = questions_df.iloc[idx]
     qid = str(row["qid"]).strip()
 
-    # ===== 页头 =====
-    st.title("LSTI - 刘恋粉丝人格测试")
+    st.title("LSTI")
+    st.caption("刘恋粉丝人格测试")
     st.caption(f"第 {idx + 1} / {total_questions} 题")
     st.progress((idx + 1) / total_questions)
 
     st.markdown("---")
 
-    # ===== 题目主体 =====
     st.markdown(f"## {qid}")
     st.write(row["question"])
 
     current_answer = st.session_state.answers.get(qid)
 
-    # ===== 选项按钮：不用 columns，避免手机端横向溢出 =====
     for opt in ["A", "B", "C", "D"]:
         label = row[OPTION_MAP[opt]]
-        button_text = f"✅ {label}" if current_answer == opt else label
+
+        if current_answer == opt:
+            st.markdown(
+                """
+                <style>
+                div[data-testid="stButton"]:has(button[kind="secondary"]) button {
+                    transition: all 0.15s ease;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+
+        button_text = f"{label} · 已选" if current_answer == opt else label
 
         if st.button(button_text, key=f"{qid}_{opt}"):
             st.session_state.answers[qid] = opt
             RERUN()
 
+        # 选中态：用按钮后的局部样式覆盖
+        if current_answer == opt:
+            st.markdown(
+                f"""
+                <style>
+                div[data-testid="stButton"]:has(button[aria-label="{button_text}"]) button {{
+                    background: rgba(173, 196, 138, 0.85) !important;
+                    border-color: rgba(108, 132, 82, 0.70) !important;
+                    font-weight: 700 !important;
+                }}
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+
     st.markdown("---")
 
-    # ===== 导航按钮 =====
     if idx < total_questions - 1:
         col1, col2 = st.columns(2)
 
@@ -347,7 +351,7 @@ def render_question_page():
         with col2:
             if st.button("下一题", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("请先选一个选项再点下一题")
+                    st.warning("请选择一个选项")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
@@ -361,7 +365,7 @@ def render_question_page():
                 RERUN()
 
         with col2:
-            if st.button("提交测试", key=f"submit_{qid}"):
+            if st.button("提交", key=f"submit_{qid}"):
                 if qid not in st.session_state.answers:
                     st.warning("先完成当前题目再提交")
                 else:
@@ -375,7 +379,6 @@ def render_question_page():
                         st.session_state.result_code = result_code
                         st.session_state.show_result = True
                         RERUN()
-
 
 if st.session_state.show_result:
     render_result_page()
