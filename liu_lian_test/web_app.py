@@ -76,7 +76,7 @@ footer {
 /* ===== 主卡片 ===== */
 .block-container {
     max-width: 720px;
-    margin: 0 auto;
+    margin: 1.2rem auto 0 auto;
     padding-top: 1rem !important;
     padding-bottom: 0.85rem !important;
     padding-left: 1.05rem !important;
@@ -259,6 +259,7 @@ div[data-testid="stHorizontalBlock"] button {
 /* ===== 手机端 ===== */
 @media (max-width: 768px) {
     .block-container {
+        margin-top: 1rem;
         max-width: 100%;
         padding-top: 0.85rem !important;
         padding-bottom: 0.75rem !important;
