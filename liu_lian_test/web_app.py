@@ -350,7 +350,7 @@ def render_question_page():
         col1, col2 = st.columns(2)
 
         with col1:
-            if idx > 0 and st.button("上一题", key=f"prev_{qid}"):
+            if idx > 0 and st.button("← 上一题", key=f"prev_{qid}"):
                 st.session_state.current_index -= 1
                 RERUN()
 
