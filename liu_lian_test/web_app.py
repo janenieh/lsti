@@ -310,12 +310,34 @@ div[data-testid="stHorizontalBlock"] button {
         border-radius: 8px !important;
     }
 
+    /* 金属质感增强 */
+    div[data-testid="stHorizontalBlock"] button {
+    border-radius: 6px !important;
+    letter-spacing: 0.08em;
+
+    background: linear-gradient(
+        180deg,
+        rgba(25, 55, 45, 0.95) 0%,
+        rgba(7, 28, 24, 0.95) 100%
+    ) !important;
+
+    box-shadow:
+        inset 0 0 10px rgba(232, 201, 135, 0.08),
+        0 0 0 1px rgba(232, 201, 135, 0.05);
+    }
+
     div[data-testid="stHorizontalBlock"] {
-    max-width: 220px !important;   /* 控制整体宽度 */
-    margin: 0 auto !important;     /* 关键：居中 */
+    max-width: 220px !important;
+    margin: 0 auto !important;
     display: flex !important;
     justify-content: center !important;
     gap: 0.4rem !important;
+    }
+
+    /* 额外稳定（防止某些版本偏移） */
+    div[data-testid="stHorizontalBlock"] > div {
+    display: flex;
+    justify-content: center;
     }
 
     div[data-testid="stHorizontalBlock"] button {
