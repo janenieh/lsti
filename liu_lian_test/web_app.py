@@ -186,7 +186,7 @@ button p, button span {
 
     /* 只控制上一题/下一题这一类 columns 行 */
     div[data-testid="stHorizontalBlock"] {
-        max-width: 260px !important;
+        max-width: 230px !important;
         margin: 0 auto !important;
         display: flex !important;
         flex-wrap: nowrap !important;
