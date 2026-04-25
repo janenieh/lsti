@@ -23,15 +23,15 @@ else:
     RERUN = st.experimental_rerun
 
 IMAGE_MAP = {
-    "A": "A.png",
-    "B": "B.png",
-    "C": "C.png",
-    "F": "F.png",
-    "G": "G.png",
-    "H": "H.png",
-    "巡演特种兵": "tour.png",
-    "潜伏型抢票机器人": "stealth.png",
-    "LLDG": "lldg.png",
+    "A": "A.jpg",
+    "B": "B.jpg",
+    "C": "C.jpg",
+    "F": "F.jpg",
+    "G": "G.jpg",
+    "H": "H.jpg",
+    "巡演特种兵": "tour.jpg",
+    "潜伏型抢票机器人": "stealth.jpg",
+    "LLDG": "lldg.jpg",
 }
 
 OPTION_MAP = {
