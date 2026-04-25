@@ -535,7 +535,7 @@ def render_question_page():
         with col2:
             if st.button("下一题 →", key=f"next_{qid}"):
                 if qid not in st.session_state.answers:
-                    st.warning("请先选一个选项再点下一题")
+                    st.warning("请先选一个选项")
                 else:
                     st.session_state.current_index += 1
                     RERUN()
